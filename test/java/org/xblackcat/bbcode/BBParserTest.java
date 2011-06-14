@@ -1,9 +1,11 @@
 package org.xblackcat.bbcode;
 
+import junit.framework.TestCase;
+
 /**
  * @author xBlackCat Date: 14.06.11
  */
-public class BBParserTest {
+public class BBParserTest extends TestCase {
     public void testParser() {
 
     }

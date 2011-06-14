@@ -1,21 +1,24 @@
 package org.xblackcat.bbcode;
 
-import org.apache.commons.collections.iterators.EmptyIterator;
-
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 
-/**
- * Created by IntelliJ IDEA. User: Alexey Date: 12.06.11 Time: 14:41 To change this template use File | Settings | File
- * Templates.
- */
 public class TextBBTag extends ABBTag {
+    public static final Iterator<BBTag> NO_ELEMENTS;
+
+    static {
+        Iterable<BBTag> bbTagIterable = Collections.emptySet();
+        NO_ELEMENTS = bbTagIterable.iterator();
+    }
+
     private String content;
 
     public TextBBTag(String content) {
         super(BBTagType.Text, "");
         this.content = content;
     }
-    
+
     public TextBBTag(BBTag parent, String content) {
         super(parent, BBTagType.Text, "");
         this.content = content;
@@ -53,7 +56,7 @@ public class TextBBTag extends ABBTag {
 
     @Override
     public void add(int index, BBTag element) {
-      
+
     }
 
     @Override
@@ -62,8 +65,28 @@ public class TextBBTag extends ABBTag {
     }
 
     @Override
+    protected void asPlainText(StringBuilder out) {
+        out.append(content);
+    }
+
+    @Override
+    public boolean add(BBAttribute bbTag) {
+        return false;
+    }
+
+    @Override
+    public boolean remove(BBAttribute o) {
+        return false;
+    }
+
+    @Override
+    public Collection<BBAttribute> attributes() {
+        return Collections.emptySet();
+    }
+
+    @Override
     public Iterator<BBTag> iterator() {
-        return EmptyIterator.INSTANCE;
+        return NO_ELEMENTS;
     }
 
     @Override

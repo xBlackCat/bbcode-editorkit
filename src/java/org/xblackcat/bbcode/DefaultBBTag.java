@@ -114,7 +114,7 @@ public class DefaultBBTag extends ABBTag {
 
     @Override
     public String toString() {
-        return
+        return null;
     }
 
     @Override
