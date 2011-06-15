@@ -12,16 +12,12 @@ public class TextBBTag extends ABBTag {
         NO_ELEMENTS = bbTagIterable.iterator();
     }
 
-    private String content;
-
     public TextBBTag(String content) {
-        super(BBTagType.Text, "");
-        this.content = content;
+        super(BBTagType.Text, "", content);
     }
 
     public TextBBTag(BBTag parent, String content) {
-        super(parent, BBTagType.Text, "");
-        this.content = content;
+        super(parent, BBTagType.Text, "", content);
     }
 
     @Override
@@ -87,11 +83,6 @@ public class TextBBTag extends ABBTag {
     @Override
     public Iterator<BBTag> iterator() {
         return NO_ELEMENTS;
-    }
-
-    @Override
-    public String getContent() {
-        return content;
     }
 
     @Override

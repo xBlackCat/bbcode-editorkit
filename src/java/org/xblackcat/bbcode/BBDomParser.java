@@ -13,7 +13,7 @@ public class BBDomParser {
     public BBTag parse(Reader r) throws IOException {
         Iterator<Part> i = new SplitIterator(r);
 
-        BBTag root = new DefaultBBTag("", BBTagType.Root);
+        BBTag root = new DefaultBBTag("", BBTagType.Root, "");
 
         BBTag currentTag = root;
 
@@ -52,20 +52,24 @@ public class BBDomParser {
                         continue;
                     }
 
-                    BBTag lastTag = tagStack.pollFirst();
-                    while (lastTag != null && lastTag != root && !lastTag.getName().equals(tagName)) {
-                        BBTag lastTagParent = lastTag.getParent();
-                        lastTagParent.remove(lastTag);
+                    do {
+                        BBTag lastTagParent = currentTag.getParent();
+                        lastTagParent.remove(currentTag);
+                        StringBuilder content = new StringBuilder(currentTag.getContent());
+                        for (BBTag t : currentTag) {
+                            content.append(t.getContent());
+                        }
+                        lastTagParent.add(new TextBBTag(content.toString()));
+                        currentTag = tagStack.pollFirst();
+                    } while (currentTag != null && currentTag != root && !currentTag.getName().equals(tagName));
 
-                        lastTagParent.add(new TextBBTag(lastTag.getContent()));
-
-                        lastTag = tagStack.pollFirst();
-                    }
-
-                    if (lastTag == null) {
+                    if (currentTag == null) {
                         // No more tags in stack: it is can not be at all.
                         throw new BBParserException("Expecting open tag in stack.");
                     }
+
+                    // Open tag was found - close it
+                    currentTag = tagStack.pollFirst();
                 } else {
                     BBTag tag = TagUtils.parseOpenTag(part);
                     currentTag.add(tag);

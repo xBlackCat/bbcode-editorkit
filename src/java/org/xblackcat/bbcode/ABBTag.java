@@ -4,15 +4,17 @@ public abstract class ABBTag implements BBTag {
     protected String name;
     protected BBTagType type;
     protected BBTag parent;
+    protected String content;
 
-    public ABBTag(BBTagType type, String name) {
-        this(null, type, name);
+    protected ABBTag(BBTagType type, String name, String content) {
+        this(null, type, name, content);
     }
 
-    public ABBTag(BBTag parent, BBTagType type, String name) {
+    protected ABBTag(BBTag parent, BBTagType type, String name, String content) {
         this.parent = parent;
         this.type = type;
         this.name = name;
+        this.content = content;
     }
 
     @Override
@@ -53,4 +55,8 @@ public abstract class ABBTag implements BBTag {
         return result;
     }
 
+    @Override
+    public String getContent() {
+        return content;
+    }
 }

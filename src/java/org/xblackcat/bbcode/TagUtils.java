@@ -57,11 +57,11 @@ public class TagUtils {
 
     public static BBTag parseOpenTag(String part) {
         String tagName = getTagName(part);
-        if (tagName == null || part.charAt(1) == '/') {
+        if (tagName == null || !Character.isLetter(part.charAt(1))) {
             return null;
         }
 
-        BBTag tag = new DefaultBBTag(tagName, BBTagType.Tag);
+        BBTag tag = new DefaultBBTag(tagName, BBTagType.Tag, part);
 
         ReadAttributeState state = ReadAttributeState.Null;
 

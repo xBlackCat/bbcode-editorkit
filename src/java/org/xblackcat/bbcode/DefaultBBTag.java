@@ -9,12 +9,12 @@ public class DefaultBBTag extends ABBTag {
     protected List<BBTag> children = new ArrayList<BBTag>();
     protected Map<String, BBAttribute> attributes = new HashMap<String, BBAttribute>();
 
-    protected DefaultBBTag(String name, BBTagType type) {
-        this(null, name, type);
+    protected DefaultBBTag(String name, BBTagType type, String content) {
+        this(null, name, type, content);
     }
 
-    protected DefaultBBTag(BBTag parent, String name, BBTagType type) {
-        super(parent, type, name);
+    protected DefaultBBTag(BBTag parent, String name, BBTagType type, String content) {
+        super(parent, type, name, content);
     }
 
     @Override
@@ -96,40 +96,40 @@ public class DefaultBBTag extends ABBTag {
         return children.set(index, bbTag);
     }
 
-    @Override
-    public String getContent() {
-        StringBuilder content = new StringBuilder();
-        content.append('[');
-        content.append(name);
-        if (attributes.size() > 0) {
-            BBAttribute defAttribute = attributes.get(null);
-            if (defAttribute != null) {
-                content.append('=');
-                content.append(defAttribute.getValue());
-            }
-
-            for (BBAttribute a : attributes.values()) {
-                if (a.getName() != null) {
-                    content.append(' ');
-                    content.append(a.getName());
-                    content.append("=\"");
-                    content.append(a.getValue());
-                    content.append('"');
-                }
-            }
-        }
-
-        content.append(']');
-
-        for (BBTag t : children) {
-            content.append(t.getContent());
-        }
-
-        content.append("[/");
-        content.append(name);
-        content.append(']');
-        return content.toString();
-    }
+//    @Override
+//    public String getContent() {
+//        StringBuilder content = new StringBuilder();
+//        content.append('[');
+//        content.append(name);
+//        if (attributes.size() > 0) {
+//            BBAttribute defAttribute = attributes.get(null);
+//            if (defAttribute != null) {
+//                content.append('=');
+//                content.append(defAttribute.getValue());
+//            }
+//
+//            for (BBAttribute a : attributes.values()) {
+//                if (a.getName() != null) {
+//                    content.append(' ');
+//                    content.append(a.getName());
+//                    content.append("=\"");
+//                    content.append(a.getValue());
+//                    content.append('"');
+//                }
+//            }
+//        }
+//
+//        content.append(']');
+//
+//        for (BBTag t : children) {
+//            content.append(t.getContent());
+//        }
+//
+//        content.append("[/");
+//        content.append(name);
+//        content.append(']');
+//        return content.toString();
+//    }
 
     @Override
     public String toString() {

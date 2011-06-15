@@ -43,6 +43,14 @@ public class TagUtilsTest extends TestCase {
         assertEquals("Tag[tag=\"1\" name=\"value\"]", TestUtils.toString(TagUtils.parseOpenTag("[tag name=value =1]")));
         assertEquals("Tag[tag=\"1\" name=\"value\"]", TestUtils.toString(TagUtils.parseOpenTag("[tag =1 name=value]")));
         assertEquals("Tag[tag=\"1\" name=\"\"]", TestUtils.toString(TagUtils.parseOpenTag("[tag name= =1]")));
+
+        assertNull(TagUtils.parseOpenTag(""));
+        assertNull(TagUtils.parseOpenTag("[ tag]"));
+        assertNull(TagUtils.parseOpenTag("[/tag]"));
+        assertNull(TagUtils.parseOpenTag(" [tag]"));
+        assertNull(TagUtils.parseOpenTag("[tag] "));
+        assertNull(TagUtils.parseOpenTag("[10tag]"));
+        assertNull(TagUtils.parseOpenTag("[=tag]"));
     }
 
 }
