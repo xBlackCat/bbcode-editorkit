@@ -31,6 +31,10 @@ public class BBSplitParserTest extends TestCase {
         assertEquals("[[url=link], Test, [/url]]", splitByPartsI("[url=link]Test[/url]"));
         assertEquals("[[url=\"link\"], Test, [/url]]", splitByPartsI("[url=\"link\"]Test[/url]"));
         assertEquals("[[url=\"link[]\"], Test, [/url]]", splitByPartsI("[url=\"link[]\"]Test[/url]"));
+        assertEquals("[[url='link'], Test, [/url]]", splitByPartsI("[url='link']Test[/url]"));
+        assertEquals("[[url='link[]'], Test, [/url]]", splitByPartsI("[url='link[]']Test[/url]"));
+        assertEquals("[[url=\"'link'\"], Test, [/url]]", splitByPartsI("[url=\"'link'\"]Test[/url]"));
+        assertEquals("[[url='\"link\"'], Test, [/url]]", splitByPartsI("[url='\"link\"']Test[/url]"));
         assertEquals("[[b], Test, [/b], [i], test, [/i]]", splitByPartsI("[b]Test[/b][i]test[/i]"));
         assertEquals("[[b], [i], Test, [/i], [/b]]", splitByPartsI("[b][i]Test[/i][/b]"));
         assertEquals("[Test, [img], test, [/img], test]", splitByPartsI("Test[img]test[/img]test"));

@@ -5,14 +5,14 @@ import java.io.Reader;
 import java.util.Iterator;
 
 /**
-* Created by IntelliJ IDEA. User: Alexey Date: 12.06.11 Time: 14:16 To change this template use File | Settings | File
-* Templates.
-*/
+ * Created by IntelliJ IDEA. User: Alexey Date: 12.06.11 Time: 14:16 To change this template use File | Settings | File
+ * Templates.
+ */
 class SplitIterator implements Iterator<Part> {
     private StringBuilder buf = new StringBuilder();
 
     private boolean braceOpen = false;
-    private boolean quoteOpen = false;
+    private char openQuote = 0;
 
     private final Reader source;
 
@@ -59,10 +59,14 @@ class SplitIterator implements Iterator<Part> {
                     braceOpen = true;
                 }
                 buf.append(c);
-            } else if (c == '"' && braceOpen) {
-                quoteOpen = !quoteOpen;
+            } else if ((c == '"' || c == '\'') && braceOpen) {
+                if (openQuote == 0) {
+                    openQuote = c;
+                } else if (openQuote == c) {
+                    openQuote = 0;
+                }
                 buf.append(c);
-            } else if (c == ']' && braceOpen && !quoteOpen) {
+            } else if (c == ']' && braceOpen && openQuote == 0) {
                 buf.append(c);
                 if (buf.length() > 0) {
                     result = new Part(buf.toString());
