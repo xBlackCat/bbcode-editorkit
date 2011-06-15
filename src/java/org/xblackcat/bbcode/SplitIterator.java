@@ -73,6 +73,12 @@ class SplitIterator implements Iterator<Part> {
                     buf.setLength(0);
                 }
                 braceOpen = false;
+            } else if (c == '\n' && !braceOpen) {
+                buf.append(c);
+                if (buf.length() > 0) {
+                    result = new Part(buf.toString());
+                    buf.setLength(0);
+                }
             } else {
                 buf.append(c);
             }
