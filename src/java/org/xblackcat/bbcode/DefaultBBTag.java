@@ -154,7 +154,13 @@ public class DefaultBBTag extends ABBTag {
             }
         }
 
-        out.append(']');
+        out.append("] { ");
+        for (BBTag t : children) {
+            out.append(t.toString());
+            out.append(' ');
+        }
+        out.append('}');
+
         return out.toString();
     }
 

@@ -20,22 +20,18 @@ public class BBDomParser {
         Deque<BBTag> tagStack = new LinkedList<BBTag>();
 
         while (i.hasNext()) {
-            Part p = i.next();
+            String part = i.next().getContent();
 
-            if (TagUtils.isTag(p)) {
-                String tagName = TagUtils.getTagName(p.getContent());
-                if (p.getContent().charAt(1) == '/') {
+            if (TagUtils.isTag(part)) {
+                String tagName = TagUtils.getTagName(part);
+                if (part.charAt(1) == '/') {
                     // The tag is closing tag.
 
                     // Look for open tag in stack. If match is not found - treat the tag as plain text.
 
                     // Simple check - is closing current tag?
                     if (tagName.equals(currentTag.getName())) {
-                        BBTag tag = tagStack.pollFirst();
-
-                        if (tag != currentTag) {
-                            throw new BBParserException("Last tag in stack is not current tag!");
-                        }
+                        currentTag = tagStack.pollFirst();
 
                         // Checks successful - ignore text content.
                         continue;
@@ -52,12 +48,12 @@ public class BBDomParser {
 
                     if (!hasOpenTag) {
                         // The tag has not been open: treat as plain text
-                        currentTag.add(new TextBBTag(p.getContent()));
+                        currentTag.add(new TextBBTag(part));
                         continue;
                     }
 
                     BBTag lastTag = tagStack.pollFirst();
-                    while (lastTag != null && !lastTag.getName().equals(tagName)) {
+                    while (lastTag != null && lastTag != root && !lastTag.getName().equals(tagName)) {
                         BBTag lastTagParent = lastTag.getParent();
                         lastTagParent.remove(lastTag);
 
@@ -71,12 +67,14 @@ public class BBDomParser {
                         throw new BBParserException("Expecting open tag in stack.");
                     }
                 } else {
-                    currentTag = new DefaultBBTag(currentTag, tagName, BBTagType.Tag);
-
+                    BBTag tag = TagUtils.parseOpenTag(part);
+                    currentTag.add(tag);
                     tagStack.addFirst(currentTag);
+
+                    currentTag = tag;
                 }
             } else {
-                currentTag.add(new TextBBTag(p.getContent()));
+                currentTag.add(new TextBBTag(part));
             }
         }
 
