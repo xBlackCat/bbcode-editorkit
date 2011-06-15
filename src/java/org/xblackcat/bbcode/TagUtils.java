@@ -1,10 +1,12 @@
 package org.xblackcat.bbcode;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 public class TagUtils {
-    private static final Pattern ATTRIBUTE_PARSER = Pattern.compile("(\\w*)=(['\"])(.+?)\2");
+    private enum ReadAttributeState {
+        Null,
+        Name,
+        Quote,
+        Value
+    }
 
     public static boolean isTag(Part p) {
         return isTag(p.getContent());
@@ -54,23 +56,104 @@ public class TagUtils {
     }
 
     public static BBTag parseOpenTag(String part) {
-        String name = getTagName(part);
-        if (name == null || part.charAt(1) == '/') {
+        String tagName = getTagName(part);
+        if (tagName == null || part.charAt(1) == '/') {
             return null;
         }
 
-        BBTag tag = new DefaultBBTag(name, BBTagType.Tag);
+        BBTag tag = new DefaultBBTag(tagName, BBTagType.Tag);
 
-        Matcher attr = ATTRIBUTE_PARSER.matcher(part);
-        if (attr.find(name.length() + 1)) {
-            do {
-                BBAttribute a = new DefaultBBAttribute(attr.group(1));
-                a.setValue(attr.group(3));
+        ReadAttributeState state = ReadAttributeState.Null;
 
-                tag.add(a);
-            } while (attr.find());
+        String name = null;
+        Character openQuote = null;
+
+        StringBuilder buf = new StringBuilder();
+
+        int pos = tagName.length() + 1;
+        char c;
+        if (pos != part.length() - 1) {
+            while ((c = part.charAt(pos)) != ']') {
+                pos++;
+                switch (state) {
+                    case Name:
+                        if (c == '=') {
+                            // Attribute name ended.
+                            state = ReadAttributeState.Quote;
+                            if (buf.length() > 0) {
+                                name = buf.toString();
+                                buf.setLength(0);
+                            } else {
+                                name = null;
+                            }
+                        } else if (Character.isSpaceChar(c)) {
+                            // Attribute name ended - no value
+                            state = ReadAttributeState.Null;
+                            addAttribute(tag, buf.toString(), "");
+                            buf.setLength(0);
+                        } else {
+                            buf.append(c);
+                        }
+                        break;
+                    case Quote:
+                        if (c == '"' || c == '\'') {
+                            openQuote = c;
+                            state = ReadAttributeState.Value;
+                        } else if (!Character.isSpaceChar(c)) {
+                            openQuote = null;
+                            buf.setLength(0);
+                            buf.append(c);
+                            state = ReadAttributeState.Value;
+                        } else {
+                            state = ReadAttributeState.Null;
+                            addAttribute(tag, name, "");
+                        }
+                        break;
+                    case Value:
+                        if (Character.isSpaceChar(c) || openQuote != null && openQuote == c) {
+                            // Attribute value ended.
+                            state = ReadAttributeState.Null;
+                            addAttribute(tag, name, buf.toString());
+                            buf.setLength(0);
+                        } else {
+                            buf.append(c);
+                        }
+                        break;
+                    default:
+                        if (Character.isLetter(c)) {
+                            state = ReadAttributeState.Name;
+                            buf.setLength(0);
+                            buf.append(c);
+                        } else if (c == '=') {
+                            // Default attribute
+                            state = ReadAttributeState.Quote;
+                            buf.setLength(0);
+                            name = null;
+                        }
+                        break;
+                }
+            }
+
+            // Make last step according state
+            switch (state) {
+                case Name:
+                    addAttribute(tag, buf.toString(), "");
+                    break;
+                case Value:
+                    addAttribute(tag, name, buf.toString());
+                    break;
+                case Quote:
+                    addAttribute(tag, name, "");
+                    break;
+            }
         }
 
         return tag;
+    }
+
+    private static void addAttribute(BBTag tag, String name, String value) {
+        BBAttribute a = new DefaultBBAttribute(name);
+        a.setValue(value);
+        tag.add(a);
     }
 }

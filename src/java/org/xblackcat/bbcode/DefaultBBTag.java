@@ -7,16 +7,7 @@ import java.util.*;
  */
 public class DefaultBBTag extends ABBTag {
     protected List<BBTag> children = new ArrayList<BBTag>();
-    protected Set<BBAttribute> attributes = new TreeSet<BBAttribute>(new Comparator<BBAttribute>() {
-        @Override
-        public int compare(BBAttribute a1, BBAttribute a2) {
-            if (a1.getName() == null) {
-                return a2.getName() == null ? 0 : 1;
-            } else {
-                return a2.getName() == null ? -1 : a1.getName().compareTo(a2.getName());
-            }
-        }
-    });
+    protected Map<String, BBAttribute> attributes = new HashMap<String, BBAttribute>();
 
     protected DefaultBBTag(String name, BBTagType type) {
         this(null, name, type);
@@ -67,17 +58,24 @@ public class DefaultBBTag extends ABBTag {
 
     @Override
     public boolean add(BBAttribute bbAttribute) {
-        return attributes.add(bbAttribute);
+        return attributes.put(bbAttribute.getName(), bbAttribute) != null;
+    }
+
+    @Override
+    public String getAttributeValue(String attributeName) {
+        BBAttribute a = attributes.get(attributeName);
+
+        return a == null ? null : a.getValue();
     }
 
     @Override
     public boolean remove(BBAttribute o) {
-        return attributes.remove(o);
+        return attributes.remove(o.getName()) != null;
     }
 
     @Override
     public Collection<BBAttribute> attributes() {
-        return attributes;
+        return attributes.values();
     }
 
     @Override
@@ -101,33 +99,63 @@ public class DefaultBBTag extends ABBTag {
     @Override
     public String getContent() {
         StringBuilder content = new StringBuilder();
-        return "";
-    }
+        content.append('[');
+        content.append(name);
+        if (attributes.size() > 0) {
+            BBAttribute defAttribute = attributes.get(null);
+            if (defAttribute != null) {
+                content.append('=');
+                content.append(defAttribute.getValue());
+            }
 
-    public String asPlainText() {
-        StringBuilder out = new StringBuilder();
+            for (BBAttribute a : attributes.values()) {
+                if (a.getName() != null) {
+                    content.append(' ');
+                    content.append(a.getName());
+                    content.append("=\"");
+                    content.append(a.getValue());
+                    content.append('"');
+                }
+            }
+        }
 
-        asPlainText(out);
+        content.append(']');
 
-        return out.toString();
+        for (BBTag t : children) {
+            content.append(t.getContent());
+        }
+
+        content.append("[/");
+        content.append(name);
+        content.append(']');
+        return content.toString();
     }
 
     @Override
     public String toString() {
-        return null;
-    }
-
-    @Override
-    protected void asPlainText(StringBuilder out) {
+        StringBuilder out = new StringBuilder();
         out.append('[');
         out.append(name);
         if (attributes.size() > 0) {
+            BBAttribute defAttribute = attributes.get(null);
+            if (defAttribute != null) {
+                out.append('=');
+                out.append(defAttribute.getValue());
+            }
 
+            for (BBAttribute a : attributes.values()) {
+                if (a.getName() != null) {
+                    out.append(' ');
+                    out.append(a.getName());
+                    out.append("=\"");
+                    out.append(a.getValue());
+                    out.append('"');
+                }
+            }
         }
 
         out.append(']');
-        out.append('[');
-        out.append('[');
+        return out.toString();
     }
 
     private void updateParent(BBTag bbTag) {

@@ -53,5 +53,4 @@ public abstract class ABBTag implements BBTag {
         return result;
     }
 
-    protected abstract void asPlainText(StringBuilder out);
 }

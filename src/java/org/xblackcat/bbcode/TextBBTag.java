@@ -65,8 +65,8 @@ public class TextBBTag extends ABBTag {
     }
 
     @Override
-    protected void asPlainText(StringBuilder out) {
-        out.append(content);
+    public String getAttributeValue(String attributeName) {
+        return null;
     }
 
     @Override

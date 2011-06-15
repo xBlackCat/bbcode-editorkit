@@ -21,6 +21,8 @@ public interface BBTag extends Iterable<BBTag> {
 
     boolean add(BBAttribute bbTag);
 
+    String getAttributeValue(String attributeName);
+
     void add(int index, BBTag element);
 
     BBTag set(int index, BBTag element);
