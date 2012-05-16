@@ -4,53 +4,55 @@ import junit.framework.TestCase;
 
 public class TagUtilsTest extends TestCase {
     public void testGetTagName() {
-        assertEquals("tag", TagUtils.getTagName("[tag]"));
-        assertEquals("tag", TagUtils.getTagName("[TAG]"));
-        assertEquals("tag", TagUtils.getTagName("[/Tag]"));
-        assertEquals("tag", TagUtils.getTagName("[tag attribute='test']"));
-        assertEquals("tag", TagUtils.getTagName("[tag=parameter]"));
-        assertEquals("tag", TagUtils.getTagName("[tag'n'bug]"));
-        assertEquals("tag", TagUtils.getTagName("[/tag]"));
-        assertEquals("таг", TagUtils.getTagName("[Таг]"));
-        assertEquals("таг", TagUtils.getTagName("[/ТАГ]"));
-        assertEquals("таг", TagUtils.getTagName("[/таг]"));
+        assertEquals("tag", BBDomParser.getTagName("[tag]"));
+        assertEquals("tag", BBDomParser.getTagName("[TAG]"));
+        assertEquals("tag", BBDomParser.getTagName("[/Tag]"));
+        assertEquals("tag", BBDomParser.getTagName("[tag attribute='test']"));
+        assertEquals("tag", BBDomParser.getTagName("[tag=parameter]"));
+        assertEquals("tag", BBDomParser.getTagName("[tag'n'bug]"));
+        assertEquals("tag", BBDomParser.getTagName("[/tag]"));
+        assertEquals("таг", BBDomParser.getTagName("[Таг]"));
+        assertEquals("таг", BBDomParser.getTagName("[/ТАГ]"));
+        assertEquals("таг", BBDomParser.getTagName("[/таг]"));
 
 
-        assertNull(TagUtils.getTagName(""));
-        assertNull(TagUtils.getTagName("[]"));
-        assertNull(TagUtils.getTagName("[/]"));
-        assertNull(TagUtils.getTagName(" [tag]"));
-        assertNull(TagUtils.getTagName("[tag] "));
-        assertNull(TagUtils.getTagName("[ tag]"));
-        assertNull(TagUtils.getTagName("tag attribute='test'"));
-        assertNull(TagUtils.getTagName("[ /tag]"));
+        assertNull(BBDomParser.getTagName(""));
+        assertNull(BBDomParser.getTagName("[]"));
+        assertNull(BBDomParser.getTagName("[/]"));
+        assertNull(BBDomParser.getTagName(" [tag]"));
+        assertNull(BBDomParser.getTagName("[tag] "));
+        assertNull(BBDomParser.getTagName("[ tag]"));
+        assertNull(BBDomParser.getTagName("tag attribute='test'"));
+        assertNull(BBDomParser.getTagName("[ /tag]"));
     }
 
     public void testParseOpenTag() {
-        assertEquals("Tag[tag]", TestUtils.toString(TagUtils.parseOpenTag("[tag]")));
-        assertEquals("Tag[tag]", TestUtils.toString(TagUtils.parseOpenTag("[tag  ]")));
-        assertEquals("Tag[tag=\"1\"]", TestUtils.toString(TagUtils.parseOpenTag("[tag=1]")));
-        assertEquals("Tag[tag=\"1\"]", TestUtils.toString(TagUtils.parseOpenTag("[tag='1']")));
-        assertEquals("Tag[tag=\"1\"]", TestUtils.toString(TagUtils.parseOpenTag("[tag=\"1\"]")));
-        assertEquals("Tag[tag=\"1\"]", TestUtils.toString(TagUtils.parseOpenTag("[tag  =1]")));
-        assertEquals("Tag[tag=\"1\"]", TestUtils.toString(TagUtils.parseOpenTag("[tag  ='1']")));
-        assertEquals("Tag[tag=\"1\"]", TestUtils.toString(TagUtils.parseOpenTag("[tag  =\"1\"]")));
-        assertEquals("Tag[tag name=\"value\"]", TestUtils.toString(TagUtils.parseOpenTag("[tag name=value]")));
-        assertEquals("Tag[tag name=\"value\"]", TestUtils.toString(TagUtils.parseOpenTag("[tag name='value']")));
-        assertEquals("Tag[tag name=\"value\"]", TestUtils.toString(TagUtils.parseOpenTag("[tag name=\"value\"]")));
-        assertEquals("Tag[tag name=\"\"]", TestUtils.toString(TagUtils.parseOpenTag("[tag name]")));
-        assertEquals("Tag[tag name=\"\"]", TestUtils.toString(TagUtils.parseOpenTag("[tag name=]")));
-        assertEquals("Tag[tag=\"1\" name=\"value\"]", TestUtils.toString(TagUtils.parseOpenTag("[tag name=value =1]")));
-        assertEquals("Tag[tag=\"1\" name=\"value\"]", TestUtils.toString(TagUtils.parseOpenTag("[tag =1 name=value]")));
-        assertEquals("Tag[tag=\"1\" name=\"\"]", TestUtils.toString(TagUtils.parseOpenTag("[tag name= =1]")));
+        BBDomParser parser = new BBDomParser();
 
-        assertNull(TagUtils.parseOpenTag(""));
-        assertNull(TagUtils.parseOpenTag("[ tag]"));
-        assertNull(TagUtils.parseOpenTag("[/tag]"));
-        assertNull(TagUtils.parseOpenTag(" [tag]"));
-        assertNull(TagUtils.parseOpenTag("[tag] "));
-        assertNull(TagUtils.parseOpenTag("[10tag]"));
-        assertNull(TagUtils.parseOpenTag("[=tag]"));
+        assertEquals("Tag[tag]", TestUtils.toString(parser.parseOpenTag("[tag]")));
+        assertEquals("Tag[tag]", TestUtils.toString(parser.parseOpenTag("[tag  ]")));
+        assertEquals("Tag[tag=\"1\"]", TestUtils.toString(parser.parseOpenTag("[tag=1]")));
+        assertEquals("Tag[tag=\"1\"]", TestUtils.toString(parser.parseOpenTag("[tag='1']")));
+        assertEquals("Tag[tag=\"1\"]", TestUtils.toString(parser.parseOpenTag("[tag=\"1\"]")));
+        assertEquals("Tag[tag=\"1\"]", TestUtils.toString(parser.parseOpenTag("[tag  =1]")));
+        assertEquals("Tag[tag=\"1\"]", TestUtils.toString(parser.parseOpenTag("[tag  ='1']")));
+        assertEquals("Tag[tag=\"1\"]", TestUtils.toString(parser.parseOpenTag("[tag  =\"1\"]")));
+        assertEquals("Tag[tag name=\"value\"]", TestUtils.toString(parser.parseOpenTag("[tag name=value]")));
+        assertEquals("Tag[tag name=\"value\"]", TestUtils.toString(parser.parseOpenTag("[tag name='value']")));
+        assertEquals("Tag[tag name=\"value\"]", TestUtils.toString(parser.parseOpenTag("[tag name=\"value\"]")));
+        assertEquals("Tag[tag name=\"\"]", TestUtils.toString(parser.parseOpenTag("[tag name]")));
+        assertEquals("Tag[tag name=\"\"]", TestUtils.toString(parser.parseOpenTag("[tag name=]")));
+        assertEquals("Tag[tag=\"1\" name=\"value\"]", TestUtils.toString(parser.parseOpenTag("[tag name=value =1]")));
+        assertEquals("Tag[tag=\"1\" name=\"value\"]", TestUtils.toString(parser.parseOpenTag("[tag =1 name=value]")));
+        assertEquals("Tag[tag=\"1\" name=\"\"]", TestUtils.toString(parser.parseOpenTag("[tag name= =1]")));
+
+        assertNull(parser.parseOpenTag(""));
+        assertNull(parser.parseOpenTag("[ tag]"));
+        assertNull(parser.parseOpenTag("[/tag]"));
+        assertNull(parser.parseOpenTag(" [tag]"));
+        assertNull(parser.parseOpenTag("[tag] "));
+        assertNull(parser.parseOpenTag("[10tag]"));
+        assertNull(parser.parseOpenTag("[=tag]"));
     }
 
 }
