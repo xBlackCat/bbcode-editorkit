@@ -1,6 +1,6 @@
 package org.xblackcat.bbcode;
 
-public class BBParserException extends RuntimeException {
+public class BBParserException extends Exception {
     public BBParserException() {
     }
 

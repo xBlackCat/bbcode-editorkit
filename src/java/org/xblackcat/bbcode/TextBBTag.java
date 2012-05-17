@@ -3,14 +3,24 @@ package org.xblackcat.bbcode;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 public class TextBBTag extends ABBTag {
-    public static final Iterator<BBTag> NO_ELEMENTS;
+    public static final Iterator<BBTag> NO_ELEMENTS = new Iterator<BBTag>() {
+        @Override
+        public boolean hasNext() {
+            return false;
+        }
 
-    static {
-        Iterable<BBTag> bbTagIterable = Collections.emptySet();
-        NO_ELEMENTS = bbTagIterable.iterator();
-    }
+        @Override
+        public BBTag next() {
+            throw new NoSuchElementException();
+        }
+
+        @Override
+        public void remove() {
+        }
+    };
 
     public TextBBTag(String content) {
         super(BBTagType.Text, "", content);

@@ -2,14 +2,13 @@ package org.xblackcat.bbcode;
 
 import junit.framework.TestCase;
 
-import java.io.IOException;
 import java.io.StringReader;
 
 /**
  * @author xBlackCat Date: 14.06.11
  */
 public class BBParserTest extends TestCase {
-    public void testParser() throws IOException {
+    public void testParser() throws BBParserException {
         {
             BBTag doc = new BBDomParser().parse(new StringReader("plain text"));
 

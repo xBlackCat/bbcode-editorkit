@@ -1,6 +1,5 @@
 package org.xblackcat.bbcode;
 
-import java.io.IOException;
 import java.io.Reader;
 import java.util.Deque;
 import java.util.Iterator;
@@ -158,7 +157,7 @@ public class BBDomParser {
         tag.add(a);
     }
 
-    public BBTag parse(Reader r) throws IOException {
+    public BBTag parse(Reader r) throws BBParserException {
         Iterator<Part> i = new SplitIterator(r);
 
         BBTag root = new DefaultBBTag("", BBTagType.Root, "");
