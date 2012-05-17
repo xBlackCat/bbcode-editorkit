@@ -1,4 +1,4 @@
-package org.xblackcat.bbcode;
+package org.xblackcat.bbcode.dom;
 
 public abstract class ABBTag implements BBTag {
     protected String name;

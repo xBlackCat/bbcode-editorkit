@@ -1,4 +1,4 @@
-package org.xblackcat.bbcode;
+package org.xblackcat.bbcode.dom;
 
 /**
  * Date: 14.06.11

@@ -1,4 +1,4 @@
-package org.xblackcat.bbcode;
+package org.xblackcat.bbcode.dom;
 
 public class BBParserException extends Exception {
     public BBParserException() {

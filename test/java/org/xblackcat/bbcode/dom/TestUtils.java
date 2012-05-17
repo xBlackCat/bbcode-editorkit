@@ -1,4 +1,4 @@
-package org.xblackcat.bbcode;
+package org.xblackcat.bbcode.dom;
 
 import java.util.ArrayList;
 import java.util.Collections;
